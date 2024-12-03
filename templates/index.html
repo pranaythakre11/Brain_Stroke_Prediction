@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Stroke Prediction</title>
+    <style>
+        /* Body styling with background image */
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url('{{ url_for('static', filename='background.webp')}}');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            border-radius: 5px;
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.85);
+            padding: 30px;
+            margin-top: 50px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-container {
+            padding: 15px;
+        }
+
+        .head {
+            font-weight: bolder;
+            color: #023047;
+            font-size: 2.5rem;
+        }
+
+        .btn-primary {
+            background-color: #073b4c !important;
+            border-color: #023047 !important;
+            padding: 10px;
+            margin-top: 15px;
+            font-size: 1.2rem;
+            width: 100%;
+        }
+
+        label {
+            width: 100%;
+            font-weight: bold;
+            color: #023047;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-select {
+            padding: 10px;
+            border-radius: 5px;
+            width: 100%;
+            border: 1px solid #ccc;
+        }
+
+        .form-control {
+            padding: 10px;
+            border-radius: 5px;
+            width: 100%;
+            border: 1px solid #ccc;
+        }
+
+        .prediction {
+            background-color: #073b4c;
+            color: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.5rem;
+            margin-top: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .image-container img {
+            border-radius: 10px;
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+    </style>
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7xW704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="head">Stroke Prediction</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="image-container">
+                    <img src="{{ url_for('static', filename='image3.webp')}}" alt="Medical Image" />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <form action="{{ url_for('predict')}}" method="post" class="form">
+                    <h4>Enter Details</h4>
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select class="form-select" id="gender" name="gender">
+                            <option value="1">Male</option>
+                            <option value="0">Female</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="age">Age</label>
+                        <input type="number" class="form-control" name="age" required="required" placeholder="Age" min="1" max="100" />
+                    </div>
+                    <div class="form-group">
+                        <label for="hypertension">Hypertension</label>
+                        <select class="form-select" id="hypertension" name="hypertension">
+                            <option value="1" selected>Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="heart_disease">Heart Disease</label>
+                        <select class="form-select" id="disease" name="disease">
+                            <option value="1" selected>Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="ever_married">Ever Married</label>
+                        <select class="form-select" id="married" name="married">
+                            <option value="1" selected>Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="work_type">Work Type</label>
+                        <select class="form-select" id="work" name="work">
+                            <option value="3" selected>Self-employed</option>
+                            <option value="2">Private</option>
+                            <option value="4">Children</option>
+                            <option value="0">Government Job</option>
+                            <option value="1">Never worked</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="residence_type">Residence Type</label>
+                        <select class="form-select" id="residence" name="residence">
+                            <option value="1" selected>Urban</option>
+                            <option value="0">Rural</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="avg_glucose_level">Average Glucose Level</label>
+                        <input type="text" class="form-control" name="avg_glucose_level" required="required" placeholder="Average Glucose Level" />
+                    </div>
+                    <div class="form-group">
+                        <label for="bmi">BMI</label>
+                        <input type="text" class="form-control" name="bmi" required="required" placeholder="Body Mass Index (BMI)" />
+                    </div>
+                    <div class="form-group">
+                        <label for="smoking">Smoking Status</label>
+                        <select class="form-select" id="smoking" name="smoking">
+                            <option value="0">Unknown</option>
+                            <option value="2" selected>Never smoked</option>
+                            <option value="1">Formerly smoked</option>
+                            <option value="3">Smokes</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Predict</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <center>
+                    <h2 class="prediction">{{ prediction_text }}</h2>
+                </center>
+            </div>
+        </div>
+    </div>
